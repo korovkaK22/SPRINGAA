@@ -1,13 +1,12 @@
 package com.example.springaa;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringaaApplication {
+public class SpringApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringaaApplication.class, args);
+        org.springframework.boot.SpringApplication.run(SpringApplication.class, args);
     }
 
 }

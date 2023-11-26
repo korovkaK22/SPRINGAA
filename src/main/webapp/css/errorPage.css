@@ -1,0 +1,11 @@
+.developer-info {
+    display: none; /* Спочатку ховаємо блок інформації для розробників */
+}
+.developer-info.active {
+    display: block; /* Показуємо блок інформації для розробників, якщо активний */
+}
+.toggle-link {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}

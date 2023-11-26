@@ -1,0 +1,41 @@
+
+body {
+    background: linear-gradient( #FFECD2, #FCB69F);
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: #291679;
+}
+
+/*Зверху надпис Великий і по центру*/
+.centerSign {
+    margin-top: 1.5%;
+    text-align: center;
+    font-size: 3vw;
+    font-family: 'Alegreya', serif;
+}
+
+
+/*Хедер*/
+header {
+    padding: 10px 0;
+    font-size: 2vw;
+    font-family: 'Varela', sans-serif;
+}
+
+header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Стилі для комірок */
+.nav-item {
+    flex: 1; /* Займати рівномірно доступний простір */
+    text-align: center; /* Вирівнювання тексту по центру */
+}
+
+/* Стилі для посилань */
+.nav-item a {
+
+}

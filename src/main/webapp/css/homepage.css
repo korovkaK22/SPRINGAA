@@ -1,0 +1,21 @@
+/*Основний дів для черг*/
+.lastQueues{
+    margin-top: 1%;
+    font-size: 2vw;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-family: 'Alegreya', serif;
+}
+
+/*Контейнер для окремої черги*/
+a {
+    text-decoration: none;
+}
+
+
+a:hover {
+    color: #221167;
+    font-style: italic;
+}

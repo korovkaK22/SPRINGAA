@@ -20,31 +20,30 @@
 
 </head>
 <body>
-    <jsp:include page="header.jsp" />
-    <div class="centerSign">
-        Welcome to the Home Page!
-    </div>
+<div class="centerSign">
+    Welcome to the Home Page!
+</div>
 
-    <div class="lastQueues">
+<div class="lastQueues">
 
-       <c:choose>
-           <c:when test="${lastQueues.size()==0}">Ще немає черг. Але ви можете це виправити!</c:when>
-           <c:otherwise>
-               <div class="queueTitle">
-                   Останні створені черги:
-               </div>
-               <c:forEach items="${lastQueues}" var="queue">
+    <c:choose>
+        <c:when test="${lastQueues.size()==0}">Ще немає черг. Але ви можете це виправити!</c:when>
+        <c:otherwise>
+            <div class="queueTitle">
+                Останні створені черги:
+            </div>
+            <c:forEach items="${lastQueues}" var="queue">
                 <div class="queue">
-                   <a href="/queues/${queue.id}"><c:out value="${queue.name} "/></a>
+                    <a href="/queues/${queue.id}"><c:out value="${queue.name} "/></a>
                 </div>
-               </c:forEach>
-           </c:otherwise>
-       </c:choose>
-    </div>
+            </c:forEach>
+        </c:otherwise>
+    </c:choose>
+</div>
 
-    <div class="buttons">
+<div class="buttons">
 
-    </div>
+</div>
 
 
 
