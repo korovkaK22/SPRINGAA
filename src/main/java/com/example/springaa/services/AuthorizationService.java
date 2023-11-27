@@ -23,7 +23,7 @@ public class AuthorizationService {
      */
     @Transactional
     public Optional<UserResponse> checkUser(String username, String password){
-        Optional<User> user = userDAO.getUserByName(username);
+        Optional<User> user = userDAO.getUserByUsername(username);
         if (user.isPresent() && user.get().getPassword().equals(password)){
             return user.map(UserResponse::new);
         }
