@@ -27,7 +27,7 @@ public class QueueController {
 
     @GetMapping("/queues/{id}")
     private String homepage(Model model, @PathVariable Long id){
-        model.addAttribute("queue",   new Queue(1L, "name", false,null, null));
+        model.addAttribute("queue",   new Queue(1, "name", false,null, null));
         return "/WEB-INF/jsp/queuePage.jsp";
     }
 

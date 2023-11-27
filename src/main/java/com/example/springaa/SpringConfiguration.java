@@ -16,7 +16,6 @@ public class SpringConfiguration {
         return new QueueService();
     }
 
-
     @Bean
     public AuthorizationService getAuthorizationService(UserRepository p){
         return new AuthorizationService(p);

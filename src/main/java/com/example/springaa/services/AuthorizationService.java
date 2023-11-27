@@ -3,6 +3,7 @@ package com.example.springaa.services;
 import com.example.springaa.entity.User;
 import com.example.springaa.entity.UserResponse;
 import com.example.springaa.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class AuthorizationService {
      * @param password пароль
      * @return при наявності такого юзера, та правильному від нього паролю
      */
+    @Transactional
     public Optional<UserResponse> checkUser(String username, String password){
         Optional<User> user = userDAO.getUserByName(username);
         if (user.isPresent() && user.get().getPassword().equals(password)){

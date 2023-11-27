@@ -1,16 +1,17 @@
 package com.example.springaa.repositories;
 
 import com.example.springaa.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public class UserRepository {
+public interface UserRepository extends JpaRepository<User, Integer> {
 
-    public Optional<User> getUserByName(String name){
-        //todo =====
-        return Optional.of(new User(1L,name,"123"));
-    }
+    public Optional<User> getUserByName(String name);
+
+
+
 
 }

@@ -1,10 +1,20 @@
 package com.example.springaa.entity;
 
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+//@Entity
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@Getter
+//@Table(name="Queue_list")
 public class QueueSlot {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private User user_id;
+
+    private User user;
     private Queue queue;
+    private Long id;
 
 }
