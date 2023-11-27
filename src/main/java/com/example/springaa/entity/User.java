@@ -1,13 +1,10 @@
 package com.example.springaa.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.Entity;
+import lombok.*;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Entity
+@Data
 @AllArgsConstructor
 public class User {
 //    @Id

@@ -15,12 +15,15 @@ header nav {
 
 /* Стилі для комірок */
 .nav-item {
-
-    text-align: center; /* Вирівнювання тексту по центру */
-
+text-align: center; /* Вирівнювання тексту по центру */
 }
 
 /* Стилі для посилань */
 .nav-item a {
+    text-decoration: none;
+}
 
+a:hover {
+    color: #ad265e;
+    font-style: normal;
 }
