@@ -1,0 +1,60 @@
+.login-container {
+    background-color: rgba(229, 226, 27, 0.06);
+    padding: 3% 3% 2% 3%;
+    width: 22%;
+    margin: 2% auto auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+/*дів, у якому всі інші діви*/
+.mainDiv{
+    margin-top: 5%;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+input{
+    padding: 18px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    font-size:18px;
+}
+
+input:focus {
+    border-color: #0056b3;
+}
+
+button {
+    margin-top: 3%;
+    background-color: #0056b3;
+    color: white;
+    font-size:20px;
+    padding: 18px;
+    border: 1px solid #003d82;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #003d82;
+}
+
+
+/*текст внизу, якщо якась помилка*/
+.failMessage{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size:25px;
+    color: red;
+    font-weight: bold;
+}

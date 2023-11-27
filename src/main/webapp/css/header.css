@@ -1,0 +1,26 @@
+
+/*Хедер*/
+header {
+    padding: 10px 0;
+    font-size: 2vw;
+    font-family: 'Varela', sans-serif;
+}
+
+header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1%;
+}
+
+/* Стилі для комірок */
+.nav-item {
+
+    text-align: center; /* Вирівнювання тексту по центру */
+
+}
+
+/* Стилі для посилань */
+.nav-item a {
+
+}

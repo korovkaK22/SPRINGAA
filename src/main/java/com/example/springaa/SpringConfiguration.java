@@ -1,6 +1,8 @@
 package com.example.springaa;
 
 
+import com.example.springaa.repositories.UserRepository;
+import com.example.springaa.services.AuthorizationService;
 import com.example.springaa.services.QueueService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,12 @@ public class SpringConfiguration {
     @Bean
     public QueueService getQueueService(){
         return new QueueService();
+    }
+
+
+    @Bean
+    public AuthorizationService getAuthorizationService(UserRepository p){
+        return new AuthorizationService(p);
     }
 
 //    @Bean

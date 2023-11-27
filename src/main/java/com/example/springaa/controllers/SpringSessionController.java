@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class SpringSessionController {
 
-    @GetMapping("/")
+    @GetMapping("/a")
     public String process(Model model, HttpSession session) {
         @SuppressWarnings("unchecked")
         List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
@@ -25,7 +25,7 @@ public class SpringSessionController {
         }
         model.addAttribute("sessionMessages", messages);
 
-        return "index";
+        return "/WEB-INF/jsp/delete.jsp";
     }
 
     @PostMapping("/persistMessage")
@@ -38,12 +38,12 @@ public class SpringSessionController {
         }
         messages.add(msg);
         request.getSession().setAttribute("MY_SESSION_MESSAGES", messages);
-        return "redirect:/";
+        return "redirect:/a";
     }
 
     @PostMapping("/destroy")
     public String destroySession(HttpServletRequest request) {
         request.getSession().invalidate();
-        return "redirect:/";
+        return "redirect:/a";
     }
 }

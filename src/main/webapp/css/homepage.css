@@ -9,13 +9,3 @@
     font-family: 'Alegreya', serif;
 }
 
-/*Контейнер для окремої черги*/
-a {
-    text-decoration: none;
-}
-
-
-a:hover {
-    color: #221167;
-    font-style: italic;
-}

@@ -16,26 +16,12 @@ body {
 }
 
 
-/*Хедер*/
-header {
-    padding: 10px 0;
-    font-size: 2vw;
-    font-family: 'Varela', sans-serif;
+a {
+    text-decoration: none;
 }
 
-header nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
 
-/* Стилі для комірок */
-.nav-item {
-    flex: 1; /* Займати рівномірно доступний простір */
-    text-align: center; /* Вирівнювання тексту по центру */
-}
-
-/* Стилі для посилань */
-.nav-item a {
-
+a:hover {
+    color: #221167;
+    font-style: italic;
 }
