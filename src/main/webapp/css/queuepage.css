@@ -1,0 +1,98 @@
+/*Зверху строчка*/
+.queue-introduction{
+    text-align: center;
+    font-size: 2vw;
+    font-family: 'Alegreya', serif;
+}
+
+/*Таблиця*/
+.queue-list{
+    padding: 2% 3% 2% 3%;
+    width: 22%;
+    margin: 0% auto auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+}
+
+.user-name{
+    column-width: 200px;
+}
+
+.user-table {
+    border-collapse: collapse;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 2px solid #003d82;
+    font-size: 1.5vw;
+
+
+}
+
+.user-table th, .user-table td {
+    border: 1px solid #003d82;
+    padding: 8px;
+    text-align: center;
+}
+
+.user-table th {
+    background-color: #003d82;
+    color: white;
+    text-align: center;
+    font-size: 1.3vw;
+}
+
+.user-table td:first-child {
+    width: 50px;
+}
+
+.user-table td:nth-child(1) {
+    white-space: nowrap;
+}
+
+/*Кнопочки*/
+.buttons {
+    margin-top: 1%;
+    display: flex;
+    justify-content: center; /* Вирівнювання елементів по центру */
+    flex-wrap: wrap; /* Дозволяє переносити елементи на новий рядок */
+    gap: 10px; /* Відступ між елементами */
+}
+button:hover {
+    background-color: #003d82;
+}
+
+.buttons form {
+    max-width: 20%; /* Максимальна ширина для кожної форми */
+}
+
+
+button {
+    width: 250px;
+    margin-top: 3%;
+    background-color: #09457e;
+    color: white;
+    font-size:25px;
+    padding: 18px;
+    border: 1px solid #042a5d;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.buttons form:nth-child(2) button {
+    background-color: #980505;
+}
+
+.buttons form:nth-child(2) button:hover {
+    background-color: #730404;
+}
+
+
+.buttons form:nth-child(3) button {
+    background-color: #980505;
+}
+
+.buttons form:nth-child(3) button:hover {
+    background-color: #730404;
+}

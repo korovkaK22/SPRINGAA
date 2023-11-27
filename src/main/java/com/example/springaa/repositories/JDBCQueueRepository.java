@@ -1,100 +1,66 @@
 package com.example.springaa.repositories;
 
 import com.example.springaa.entity.Queue;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Repository
+@Transactional
 public class JDBCQueueRepository {
-
-    private final DataSource dataSource;
+    private final JdbcTemplate jdbcTemplate;
+    private final BeanPropertyRowMapper<Queue> queueMapper = new BeanPropertyRowMapper<>(Queue.class);
+    ;
 
     @Autowired
-    public JDBCQueueRepository(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public JDBCQueueRepository(JdbcTemplate jdbcTemplate) throws SQLException {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Queue create(Queue queue) throws SQLException {
+    public int create(Queue queue) throws SQLException {
         String sql = "INSERT INTO queues (name, is_open, owner_id) VALUES (?, ?, ?)";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, queue.getName());
+            ps.setBoolean(2, queue.getIsOpen());
+            ps.setInt(3, queue.getOwner().getId());
+            return ps;
+        }, keyHolder);
 
-            statement.setString(1, queue.getName());
-            statement.setBoolean(2, queue.isOpen());
-            statement.setInt(3, queue.getOwner().getId());
-
-            int affectedRows = statement.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("Creating queue failed, no rows affected.");
-            }
-
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    queue.setId(generatedKeys.getInt(1));
-                } else {
-                    throw new SQLException("Creating queue failed, no ID obtained.");
-                }
-            }
-        }
-        return queue;
+        return keyHolder.getKey() != null ? keyHolder.getKey().intValue() : -1;
     }
 
-    public Queue findById(int id) throws SQLException {
+
+    public Optional<Queue> findById(int id) throws SQLException {
         String sql = "SELECT * FROM queues WHERE id = ?";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return new Queue(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getBoolean("is_open"));
-            }
-        }
-        return null;
+        return jdbcTemplate.query(sql, queueMapper, id)
+                .stream().findAny();
     }
-//
-//    public List<Queue> findAll() throws SQLException {
-//        List<Queue> queues = new ArrayList<>();
-//        String sql = "SELECT * FROM queues";
-//        try (Connection connection = dataSource.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(sql);
-//             ResultSet resultSet = statement.executeQuery()) {
-//
-//            while (resultSet.next()) {
-//                queues.add(new Queue(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getBoolean("is_open"), ...));
-//            }
-//        }
-//        return queues;
-//    }
 
-    public boolean update(Queue queue) throws SQLException {
+    public List<Queue> findLastQueues(int amount) {
+        String sql = "SELECT * FROM queues ORDER BY id DESC LIMIT ?";
+        return jdbcTemplate.query(sql, queueMapper, amount);
+    }
+
+    public boolean update(Queue queue) {
         String sql = "UPDATE queues SET name = ?, is_open = ?, owner_id = ? WHERE id = ?";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setString(1, queue.getName());
-            statement.setBoolean(2, queue.isOpen());
-            statement.setInt(3, queue.getOwner().getId());
-            statement.setInt(4, queue.getId());
-
-            int affectedRows = statement.executeUpdate();
-            return affectedRows > 0;
-        }
+        return jdbcTemplate.update(sql, queue.getName(), queue.getIsOpen(), queue.getOwner().getId(), queue.getId()) > 0;
     }
 
-    public boolean delete(int id) throws SQLException {
+    public boolean delete(int id) {
         String sql = "DELETE FROM queues WHERE id = ?";
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setInt(1, id);
-            int affectedRows = statement.executeUpdate();
-            return affectedRows > 0;
-        }
+        return jdbcTemplate.update(sql, id) > 0;
     }
 }

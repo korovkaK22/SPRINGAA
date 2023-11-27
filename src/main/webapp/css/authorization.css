@@ -1,4 +1,4 @@
-.login-container {
+.authorization-container {
     background-color: rgba(229, 226, 27, 0.06);
     padding: 3% 3% 2% 3%;
     width: 22%;
@@ -56,5 +56,14 @@ button:hover {
     text-align: center;
     font-size:25px;
     color: red;
+    font-weight: bold;
+}
+
+.or-action{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size:22px;
     font-weight: bold;
 }

@@ -15,7 +15,6 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Table(name= "queues")
 @Data
 public class Queue {
@@ -42,4 +41,17 @@ public class Queue {
     )
     private List<User> users;
 
+    public boolean getIsOpen() {
+        return this.isOpen;
+    }
+
+    @Override
+    public String toString() {
+        return "Queue{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", isOpen=" + isOpen +
+                ", owner=" + owner.getUsername() +
+                '}';
+    }
 }

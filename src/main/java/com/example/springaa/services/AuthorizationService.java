@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class AuthorizationService {
 
     private UserRepository userDAO;
@@ -21,15 +22,17 @@ public class AuthorizationService {
      * @param password пароль
      * @return при наявності такого юзера, та правильному від нього паролю
      */
-    @Transactional
     public Optional<UserResponse> checkUser(String username, String password){
-        Optional<User> user = userDAO.getUserByUsername(username);
+        Optional<User> user = userDAO.getUserByUsernameIgnoreCase(username);
         if (user.isPresent() && user.get().getPassword().equals(password)){
             return user.map(UserResponse::new);
         }
         return Optional.empty();
     }
 
-
+    public boolean isUserExist(String username){
+        Optional<User> user = userDAO.getUserByUsernameIgnoreCase(username);
+        return user.isPresent();
+    }
 
 }

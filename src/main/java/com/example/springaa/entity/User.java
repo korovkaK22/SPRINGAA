@@ -32,4 +32,13 @@ public class User {
     @ManyToMany(mappedBy = "users",cascade = CascadeType.ALL)
     private List<Queue> queuesGuest;
 
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

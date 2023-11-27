@@ -29,11 +29,12 @@
     </div>
 
     <%--Логін--%>
-    <div class="login-container">
+    <div class="authorization-container">
         <form action="/login" method="post">
             <input type="text" name="username" value="${username}" placeholder=" Логін" required>
             <input type="password" name="password" placeholder=" Пароль" required>
             <button type="submit">Ввійти</button>
+            <div class="or-action"><a href="/register">Реєстрація</a></div>
         </form>
         <c:if test="${failMessage != null}">
             <div class="failMessage"><c:out value="${failMessage} "/></div>

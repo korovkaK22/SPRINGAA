@@ -20,8 +20,8 @@
 <header>
     <nav>
         <div class="nav-item"><a href="/">На Головну</a></div>
-        <div class="nav-item"><a href="/">11</a></div>
-        <div class="nav-item"><a href="/">11</a></div>
+        <div class="nav-item"><a href="/">Усі черги</a></div>
+        <div class="nav-item"><a href="/">Створити чергу</a></div>
         <c:if test="${sessionScope.user == null}">
             <div class="nav-item"><a href="/login">Увійти</a></div>
         </c:if>

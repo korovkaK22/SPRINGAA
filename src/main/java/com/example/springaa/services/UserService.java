@@ -3,6 +3,7 @@ package com.example.springaa.services;
 import com.example.springaa.entity.User;
 import com.example.springaa.repositories.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,16 +11,21 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class UserService {
-    UserRepository userRepository;
+   private final UserRepository userRepository;
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+
+
 
     public int createUser(User user){
         return userRepository.save(user).getId();
+    }
+    public int createUser(String username, String password){
+        User user = new User();
+        user.setPassword(password);
+        user.setUsername(username);
+        return createUser(user);
     }
 
     public Optional<User> getUserById(int id){
@@ -37,6 +43,7 @@ public class UserService {
     public void deleteUser(int id){
         userRepository.deleteById(id);
     }
+
 
 
 }
