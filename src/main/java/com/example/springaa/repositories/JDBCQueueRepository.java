@@ -2,15 +2,17 @@ package com.example.springaa.repositories;
 
 import com.example.springaa.entity.Queue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class JDBCQueueRepository {
 
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     @Autowired
     public JDBCQueueRepository(DataSource dataSource) {
@@ -42,19 +44,19 @@ public class JDBCQueueRepository {
         return queue;
     }
 
-//    public Queue findById(int id) throws SQLException {
-//        String sql = "SELECT * FROM queues WHERE id = ?";
-//        try (Connection connection = dataSource.getConnection();
-//             PreparedStatement statement = connection.prepareStatement(sql)) {
-//
-//            statement.setInt(1, id);
-//            ResultSet resultSet = statement.executeQuery();
-//            if (resultSet.next()) {
-//                return new Queue(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getBoolean("is_open"), ...);
-//            }
-//        }
-//        return null;
-//    }
+    public Queue findById(int id) throws SQLException {
+        String sql = "SELECT * FROM queues WHERE id = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return new Queue(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getBoolean("is_open"));
+            }
+        }
+        return null;
+    }
 //
 //    public List<Queue> findAll() throws SQLException {
 //        List<Queue> queues = new ArrayList<>();
