@@ -21,6 +21,7 @@ text-align: center; /* Вирівнювання тексту по центру *
 /* Стилі для посилань */
 .nav-item a {
     text-decoration: none;
+    color: #291679;
 }
 
 a:hover {
