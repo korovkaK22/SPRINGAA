@@ -45,21 +45,23 @@
                 <tr>
                     <th>Номер</th>
                     <th>Ім'я</th>
+                    <th></th>
                 </tr>
                 <c:forEach items="${users}" var="user" varStatus="status">
                     <tr>
                         <td>${status.index + 1}</td>
                         <td class="user-name">
-                                <c:out value="${user.username}"/>
-
+                            <c:out value="${user.username}"/>
+                        </td>
+                        <td>
                             <c:if test="${sessionScope.user.id == queue.owner.id}">
-                            <form action="remove_user_from_position" method="post">
-                                <input type="hidden" name="queueId" value="${queue.id}"/>
-                                <input type="hidden" name="position" value="${status.index + 1}"/>
-                                <button type="submit" class="delete-user-button">Видалити</button>
-                            </form>
+                                <form action="remove_user_from_position" method="post">
+                                    <input type="hidden" name="queueId" value="${queue.id}"/>
+                                    <input type="hidden" name="position" value="${status.index + 1}"/>
+                                    <button type="submit" class="delete-user-button"><img
+                                            src="https://i.imgur.com/03ORVeC.png" alt="del"></button>
+                                </form>
                             </c:if>
-
                         </td>
                     </tr>
                 </c:forEach>

@@ -28,6 +28,12 @@ public class QueueService {
         return queueRepository.findById(id);
     }
 
+    public Optional<Queue> updateName(int id, String name) {
+        Optional<Queue> queueOpt = queueRepository.findById(id);
+        queueOpt.ifPresent(queue -> queue.setName(name));
+        return queueOpt;
+    }
+
     public boolean isUserInQueue(int queueId, int userId) {
         return getAllUsersInQueue(queueId).stream().anyMatch(u -> u.getId() == userId);
     }

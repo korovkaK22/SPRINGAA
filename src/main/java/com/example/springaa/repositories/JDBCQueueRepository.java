@@ -56,9 +56,9 @@ public class JDBCQueueRepository {
         return jdbcTemplate.query(sql, queueMapper, amount);
     }
 
-    public boolean update(Queue queue) {
+    public boolean update(int id, String name, boolean isOpen, int ownerId) {
         String sql = "UPDATE queues SET name = ?, is_open = ?, owner_id = ? WHERE id = ?";
-        return jdbcTemplate.update(sql, queue.getName(), queue.getIsOpen(), queue.getOwner().getId(), queue.getId()) > 0;
+        return jdbcTemplate.update(sql, name, isOpen, ownerId, id) > 0;
     }
 
 
