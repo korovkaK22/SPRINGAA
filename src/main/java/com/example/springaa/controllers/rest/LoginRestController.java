@@ -6,19 +6,17 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/rest")
 public class LoginRestController {
     private AuthorizationService authorizationService;
 
 
-    @PostMapping("/rest/login")
+    @PostMapping("/login")
     private ResponseEntity<String> loginPage(@RequestParam String username,
                                            @RequestParam String password, HttpSession session) {
         //Перевірка, чи такий юзер існує
@@ -35,7 +33,7 @@ public class LoginRestController {
         return ResponseEntity.ok(session.getId()); //200
     }
 
-    @PostMapping("/rest/logout")
+    @PostMapping("/logout")
     private ResponseEntity<Void> logoutRequest(HttpSession session) {
         session.removeAttribute("user");
         return ResponseEntity.ok().build(); //200

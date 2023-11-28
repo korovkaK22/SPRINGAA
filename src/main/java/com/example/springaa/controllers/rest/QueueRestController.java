@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/rest/queues")
 public class QueueRestController {
     @Autowired
     QueueService queueService;
@@ -24,7 +25,7 @@ public class QueueRestController {
     @Autowired
     QueueRepository queueRepository;
 
-    @PostMapping("/rest/queues/create")
+    @PostMapping()
     private ResponseEntity<QueueResponse> createQueue(@RequestParam @NotBlank String name, HttpSession session) {
         //Перевірка, чи авторизований користувач
         UserResponse user = (UserResponse) session.getAttribute("user");
@@ -39,7 +40,7 @@ public class QueueRestController {
     }
 
 
-    @GetMapping("/rest/queues/{id}")
+    @GetMapping("/{id}")
     private ResponseEntity<QueueResponse> viewQueue(@PathVariable Integer id) {
         Optional<Queue> queueOpt = queueService.getQueueById(id);
         if (queueOpt.isEmpty()) {
@@ -49,47 +50,51 @@ public class QueueRestController {
     }
 
 
-    //=================================================
-    @PutMapping("/rest/queues/change_name")
+    @PutMapping("/change_name")
     private ResponseEntity<QueueResponse> changeQueue(@RequestParam @NotBlank String newName,
                                                       @RequestParam int id,
                                                       HttpSession session) {
-        Optional<ResponseEntity.BodyBuilder> validate = checksOfPermissionsOfQueue(id, session);
+        Optional<ResponseEntity.BodyBuilder> validate = new  Validator().checksOfPermissionsOfQueue(id, session);
         if (validate.isPresent()){
             return  validate.get().build();
         }
-        //Видалення черги
+        //Оновлення черги
         Optional<Queue> resultOpt = queueService.updateName(id, newName);
         return resultOpt.map(queue -> ResponseEntity.ok(new QueueResponse(queue)))
                 .orElseGet(() -> ResponseEntity.internalServerError().build());
     }
 
 
-    @DeleteMapping("/rest/queues/delete")
-    private ResponseEntity<Void> deleteQueue(@RequestParam Integer id, HttpSession session) {
-        Optional<ResponseEntity.BodyBuilder> validate = checksOfPermissionsOfQueue(id, session);
+    @DeleteMapping("/{id}")
+    private ResponseEntity<Void> deleteQueue(@PathVariable Integer id, HttpSession session) {
+        Optional<ResponseEntity.BodyBuilder> validate = new  Validator().checksOfPermissionsOfQueue(id, session);
         return validate.<ResponseEntity<Void>>map(ResponseEntity.HeadersBuilder::build).orElseGet(() -> queueService.deleteQueue(id) ?
                 ResponseEntity.ok().build() :
                 ResponseEntity.internalServerError().build());
 
     }
 
+   //======== Міні-валідація =========
+   private class Validator{
+       private Optional<ResponseEntity.BodyBuilder> checksOfPermissionsOfQueue(Integer queueId, HttpSession session) {
+           //Перевірка, чи авторизований користувач
+           UserResponse user = (UserResponse) session.getAttribute("user");
+           if (user == null) {
+               return Optional.of(ResponseEntity.status(HttpStatus.UNAUTHORIZED)); //401
+           }
+           //Перевірка, чи є така черга
+           Optional<Queue> queueOpt = queueService.getQueueById(queueId);
+           if (queueOpt.isEmpty()) {
+               return Optional.of(ResponseEntity.status(HttpStatus.NOT_FOUND)); //404
+           }
+           //Перевірка, чи є користувач овнером черги
+           if (queueOpt.get().getOwner().getId() != user.getId()) {
+               return Optional.of(ResponseEntity.status(HttpStatus.FORBIDDEN)); //403
+           }
+           return Optional.empty();
+       }
 
-    private Optional<ResponseEntity.BodyBuilder> checksOfPermissionsOfQueue(Integer queueId, HttpSession session) {
-        //Перевірка, чи авторизований користувач
-        UserResponse user = (UserResponse) session.getAttribute("user");
-        if (user == null) {
-            return Optional.of(ResponseEntity.status(HttpStatus.UNAUTHORIZED)); //401
-        }
-        //Перевірка, чи є така черга
-        Optional<Queue> queueOpt = queueService.getQueueById(queueId);
-        if (queueOpt.isEmpty()) {
-            return Optional.of(ResponseEntity.status(HttpStatus.NOT_FOUND)); //404
-        }
-        //Перевірка, чи є користувач овнером черги
-        if (queueOpt.get().getOwner().getId() != user.getId()) {
-            return Optional.of(ResponseEntity.status(HttpStatus.FORBIDDEN)); //403
-        }
-        return Optional.empty();
-    }
+   }
 }
+
+

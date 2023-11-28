@@ -3,10 +3,12 @@ package com.example.springaa.controllers;
 
 
 import com.example.springaa.entity.Queue;
+import com.example.springaa.entity.QueueResponse;
 import com.example.springaa.entity.UserResponse;
 import com.example.springaa.services.QueueService;
 import com.example.springaa.util.QueueChangingValidation;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -99,6 +101,27 @@ public class QueueController {
         return "redirect:/queues/"+ queueId;
     }
 
+
+    @PostMapping("/queues/create")
+    private String createQueue(HttpSession session,
+                            @RequestParam @NotBlank String name) {
+        UserResponse user =(UserResponse) session.getAttribute("user");
+        if (user == null){
+            return "redirect:/";
+        }
+
+        QueueResponse queue = queueService.createQueue(name, user.getId());
+        return "redirect:/queues/"+ queue.getId();
+    }
+
+    @GetMapping("/queues/create")
+    private String getCreateQueuePage(HttpSession session,
+                            Model model) {
+        UserResponse user = (UserResponse) session.getAttribute("user");
+        model.addAttribute("user", user) ;
+
+        return "/WEB-INF/jsp/queue/createQueuePage.jsp";
+    }
 
 
 

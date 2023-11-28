@@ -40,7 +40,6 @@ public class SpringConfiguration {
         return new QueueChangingValidation(queueService);
     }
 
-
     @Bean
     public DataSource dataSource(Environment environment) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();

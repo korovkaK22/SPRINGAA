@@ -16,4 +16,6 @@ public interface QueueRepository extends JpaRepository<Queue, Integer> {
     @Query(value = "SELECT q FROM Queue q ORDER BY q.id DESC")
     public List<Queue> getAllQueuesDesc();
 
+    List<Queue> findAllByIdIn(List<Integer> ids);
+
 }
