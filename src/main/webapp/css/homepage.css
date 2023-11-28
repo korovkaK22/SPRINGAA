@@ -9,3 +9,12 @@
     font-family: 'Alegreya', serif;
 }
 
+/* Стилі для посилань */
+a {
+    text-decoration: none;
+    color: #291679;
+}
+
+a:hover {
+    color: #ad265e;
+}

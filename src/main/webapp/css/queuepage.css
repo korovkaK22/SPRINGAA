@@ -108,3 +108,11 @@ button {
 #mode-queue-button{
     background-color:  #042a5d;
 }
+
+.delete-user-button{
+    background-color: #980505;
+}
+
+.delete-user-button:hover{
+    background-color: #730404;
+}

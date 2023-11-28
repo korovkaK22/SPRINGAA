@@ -93,7 +93,7 @@ public class AuthorizationController {
     }
 
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     private String logoutRequest(HttpSession session) {
         session.removeAttribute("user");
 

@@ -61,7 +61,15 @@ public class JDBCQueueRepository {
         return jdbcTemplate.update(sql, queue.getName(), queue.getIsOpen(), queue.getOwner().getId(), queue.getId()) > 0;
     }
 
+
+    /**
+     * видаляє всі записи з queue_list та queue черги з конкретним іменем
+     * @param id id таблиці
+     * @return чи було щось видалено
+     */
     public boolean delete(int id) {
+        String listSql = "DELETE FROM queue_lists WHERE queue_id = ?";
+        jdbcTemplate.update(listSql, id);
         String sql = "DELETE FROM queues WHERE id = ?";
         return jdbcTemplate.update(sql, id) > 0;
     }
@@ -79,7 +87,6 @@ public class JDBCQueueRepository {
 
     /**
      * Видаляє юзера з черги, при цьому зміщуючи всі номера наступних людей
-     *
      * @param queue_id id черги
      * @param user_id  id юзера
      * @return Чи було видалено користувача з черги

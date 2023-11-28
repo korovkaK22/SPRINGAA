@@ -2,6 +2,7 @@ package com.example.springaa.services;
 
 
 import com.example.springaa.entity.Queue;
+import com.example.springaa.entity.QueueResponse;
 import com.example.springaa.entity.User;
 import com.example.springaa.repositories.JDBCQueueRepository;
 import com.example.springaa.repositories.QueueRepository;
@@ -50,6 +51,10 @@ public class QueueService {
         return false;
     }
 
+    public boolean deleteQueue(int id){
+        return jdbcQueueRepository.delete(id);
+    }
+
 
     /**
      * Додати користувача у чергу
@@ -71,12 +76,45 @@ public class QueueService {
                 jdbcQueueRepository.addUserToQueue(queueId, userId);
     }
 
+    public boolean moveQueue(int queueId){
+        return deleteUserFromPositionInQueue(queueId, 1);
+    }
 
+    public boolean deleteUserFromPositionInQueue(int queueId, int position){
+        Optional<Integer> userId = jdbcQueueRepository.getUserIdOnPositionInQueue(queueId, position);
+        if (userId.isEmpty()){
+            return false;
+        }
+        return deleteUserFromQueue(queueId, userId.get());
+    }
+
+
+    /**
+     * Видаляє юзера з черги, при цьому зміщуючи всі номера наступних людей
+     * @param queueId id черги
+     * @param userId  id юзера
+     * @return Чи було видалено користувача з черги
+     */
     public boolean deleteUserFromQueue(int queueId, int userId){
         return jdbcQueueRepository.deleteUserFromQueue(queueId,userId);
     }
 
 
+    /**
+     * Створює нову чергу
+     * @param name (ім'я черги)
+     * @param userId юзер (існуючий)
+     * @return створена черга
+     */
+    public QueueResponse createQueue(String name, int userId){
+       Optional<User> userOpt = userRepository.findById(userId);
 
+       Queue result = new Queue();
+       result.setOpen(true);
+       result.setName(name);
+       result.setOwner(userOpt.get());
+       return new QueueResponse(queueRepository.save(result));
+
+    }
 
 }

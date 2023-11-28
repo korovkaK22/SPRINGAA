@@ -4,6 +4,7 @@ package com.example.springaa;
 import com.example.springaa.repositories.UserRepository;
 import com.example.springaa.services.AuthorizationService;
 import com.example.springaa.services.QueueService;
+import com.example.springaa.util.QueueChangingValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -32,6 +33,11 @@ public class SpringConfiguration {
     @Bean
     public JdbcTemplate getJdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
+    }
+
+    @Bean
+    public QueueChangingValidation getQueueChangingValidation(QueueService queueService){
+        return new QueueChangingValidation(queueService);
     }
 
 

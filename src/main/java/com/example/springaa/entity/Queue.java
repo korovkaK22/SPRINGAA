@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Data
 public class Queue {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Integer id;
     @Column(name="name")

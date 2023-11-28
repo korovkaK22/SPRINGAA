@@ -5,6 +5,7 @@ package com.example.springaa.controllers;
 import com.example.springaa.entity.Queue;
 import com.example.springaa.entity.UserResponse;
 import com.example.springaa.services.QueueService;
+import com.example.springaa.util.QueueChangingValidation;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class QueueController {
     private final QueueService queueService;
+    private final QueueChangingValidation queueChangingValidation;
 
 
     @GetMapping("/queues/{id}")
@@ -54,6 +56,17 @@ public class QueueController {
         return "redirect:/queues/"+ queueId;
     }
 
+    @PostMapping("/queues/remove_user_from_position")
+    private String removeUserFromPosition(HttpSession session,
+                           @RequestParam int queueId,
+                           @RequestParam int position) {
+        if (!queueChangingValidation.validatePermissions(session, queueId)){
+            return "redirect:/";
+        }
+        queueService.deleteUserFromPositionInQueue(queueId, position);
+        return "redirect:/queues/"+ queueId;
+    }
+
     @PostMapping("/queues/remove_user")
     private String removeUser(HttpSession session,
                             @RequestParam int queueId) {
@@ -69,20 +82,24 @@ public class QueueController {
     private String changeCloseable(HttpSession session,
                               @RequestParam int queueId,
                               @RequestParam boolean value) {
-        UserResponse user =(UserResponse) session.getAttribute("user");
-        if (user == null){
-            return "redirect:/";
-        }
-        Optional<Queue> queueOpt = queueService.getQueueById(queueId);
-        if (queueOpt.isEmpty()){
-            return "redirect:/";
-        }
-        if (user.getId() != queueOpt.get().getOwner().getId()){
+        if (!queueChangingValidation.validatePermissions(session, queueId)){
             return "redirect:/";
         }
         queueService.changeCloseable(queueId, value);
         return "redirect:/queues/"+ queueId;
     }
+
+    @PostMapping("/queues/move_user")
+    private String moveUser(HttpSession session,
+                                   @RequestParam int queueId) {
+        if (!queueChangingValidation.validatePermissions(session, queueId)){
+            return "redirect:/";
+        }
+        queueService.moveQueue(queueId);
+        return "redirect:/queues/"+ queueId;
+    }
+
+
 
 
 }

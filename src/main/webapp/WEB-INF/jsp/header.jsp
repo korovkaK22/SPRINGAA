@@ -26,10 +26,16 @@
             <div class="nav-item"><a href="/login">Увійти</a></div>
         </c:if>
         <c:if test="${sessionScope.user != null}">
-            <div class="nav-item"><a href="/logout">Вітаємо, <c:out value="${sessionScope.user.name}"/> (Вийти)</a></div>
+            <form action="/logout" method="post" id="logoutForm" style="display: none;">
+            </form>
+            <div class="nav-item">
+                Вітаємо, <c:out value="${sessionScope.user.name}"/>
+                <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">(Вийти)</a>
+            </div>
+
         </c:if>
     </nav>
 </header>
-<!-- Решта сторінки -->
+
 </body>
 </html>

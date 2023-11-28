@@ -49,7 +49,18 @@
                 <c:forEach items="${users}" var="user" varStatus="status">
                     <tr>
                         <td>${status.index + 1}</td>
-                        <td class="user-name"><c:out value="${user.username}"/></td>
+                        <td class="user-name">
+                                <c:out value="${user.username}"/>
+
+                            <c:if test="${sessionScope.user.id == queue.owner.id}">
+                            <form action="remove_user_from_position" method="post">
+                                <input type="hidden" name="queueId" value="${queue.id}"/>
+                                <input type="hidden" name="position" value="${status.index + 1}"/>
+                                <button type="submit" class="delete-user-button">Видалити</button>
+                            </form>
+                            </c:if>
+
+                        </td>
                     </tr>
                 </c:forEach>
             </table>
@@ -71,17 +82,17 @@
 <c:if test="${sessionScope.user != null}">
 <c:if test="${isInQueue ==false}">
 <div class="buttons">
-        <c:if test="${queue.isOpen == true}">
-        <form action="/queues/add_user" method="post">
-            <input type="hidden" name="queueId" value="${queue.id}">
-            <button type="submit">Записатися</button>
-        </form>
-        </c:if>
-        <c:if test="${queue.isOpen == false}">
-        <form>
-            <button id="disabled-button" disabled type="submit">Черга закрита</button>
-        </form>
-        </c:if>
+    <c:if test="${queue.isOpen == true}">
+    <form action="/queues/add_user" method="post">
+        <input type="hidden" name="queueId" value="${queue.id}">
+        <button type="submit">Записатися</button>
+    </form>
+    </c:if>
+    <c:if test="${queue.isOpen == false}">
+    <form>
+        <button id="disabled-button" disabled type="submit">Черга закрита</button>
+    </form>
+    </c:if>
     </c:if>
     <c:if test="${isInQueue ==true}">
     <div class="buttons">
@@ -105,9 +116,12 @@
                     <button id="open-queue-button" type="submit">Відкрити чергу</button>
                 </form>
             </c:if>
-            <form action="/your-target-page" method="post">
-                <button id="mode-queue-button" type="submit">Здвинути чергу</button>
-            </form>
+            <c:if test="${users.size()!=0}">
+                <form action="/queues/move_user" method="post">
+                    <input type="hidden" name="queueId" value="${queue.id}">
+                    <button id="mode-queue-button" type="submit">Здвинути чергу</button>
+                </form>
+            </c:if>
         </c:if>
     </div>
     </c:if>

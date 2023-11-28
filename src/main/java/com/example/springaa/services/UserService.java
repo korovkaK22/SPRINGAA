@@ -15,12 +15,10 @@ import java.util.Optional;
 public class UserService {
    private final UserRepository userRepository;
 
-
-
-
     public int createUser(User user){
         return userRepository.save(user).getId();
     }
+
     public int createUser(String username, String password){
         User user = new User();
         user.setPassword(password);
