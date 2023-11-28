@@ -35,7 +35,7 @@
                </div>
                <c:forEach items="${lastQueues}" var="queue">
                 <div class="queue">
-                   <a href="/queues/${queue.id}"><c:out value="${queue.name}"/></a>
+                   <a href="/queues/${queue.id}"><c:out value="${queue.name}"/></a> by <c:out value="${queue.owner.username}"/>
                 </div>
                </c:forEach>
            </c:otherwise>

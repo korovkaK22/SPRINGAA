@@ -51,9 +51,14 @@ public class JDBCQueueRepository {
                 .stream().findAny();
     }
 
-    public List<Queue> findLastQueues(int amount) {
-        String sql = "SELECT * FROM queues ORDER BY id DESC LIMIT ?";
-        return jdbcTemplate.query(sql, queueMapper, amount);
+    public List<Integer> findLastQueueIds(int amount) {
+        String sql = "SELECT id FROM queues ORDER BY id DESC LIMIT ?";
+        return jdbcTemplate.query(sql, new RowMapper<Integer>() {
+            @Override
+            public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getInt("id");
+            }
+        }, amount);
     }
 
     public boolean update(int id, String name, boolean isOpen, int ownerId) {

@@ -1,7 +1,6 @@
 package com.example.springaa.repositories;
 
 import com.example.springaa.entity.Queue;
-import com.example.springaa.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -12,10 +11,7 @@ import java.util.List;
 @Repository
 public interface QueueRepository extends JpaRepository<Queue, Integer> {
 
-
-    @Query(value = "SELECT q FROM Queue q ORDER BY q.id DESC")
-    public List<Queue> getAllQueuesDesc();
-
-    List<Queue> findAllByIdIn(List<Integer> ids);
+    @Query("SELECT q FROM Queue q WHERE q.id IN :ids ORDER BY q.id DESC")
+    public List<Queue> getAllQueueByIds(List<Integer> ids);
 
 }
