@@ -6,22 +6,16 @@ import com.example.springaa.entity.Queue;
 import com.example.springaa.entity.UserResponse;
 import com.example.springaa.services.QueueService;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -32,20 +26,63 @@ public class QueueController {
 
     @GetMapping("/queues/{id}")
     private String homepage(Model model, @PathVariable Integer id, HttpSession session){
-        Optional<Queue> queue= queueService.getQueueById(id);
-        if (queue.isEmpty()) {
+        Optional<Queue> queueOpt= queueService.getQueueById(id);
+        if (queueOpt.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Queue not found");
         }
-        model.addAttribute("queue", queue.get());
+        Queue queue = queueOpt.get();
+        model.addAttribute("queue", queue);
+        model.addAttribute("users", queueService.getAllUsersInQueue(id));
+        UserResponse user = (UserResponse) session.getAttribute("user");
 
-        model.addAttribute("isOwner", session.getAttribute("user") != null &&
-                ((UserResponse)session.getAttribute("user")).getId() ==  queue.get().getOwner().getId());
+        model.addAttribute("isInQueue", user != null &&
+                queueService.isUserInQueue(id, user.getId()));
+        model.addAttribute("isOwner", user != null &&
+               user.getId() == queue.getOwner().getId());
 
         return "/WEB-INF/jsp/queue/queuePage.jsp";
     }
 
+    @PostMapping("/queues/add_user")
+    private String addUser(HttpSession session,
+                            @RequestParam int queueId) {
+        UserResponse user =(UserResponse) session.getAttribute("user");
+        if (user == null){
+            return "redirect:/";
+        }
+        queueService.addUserToQueue(queueId, user.getId());
+        return "redirect:/queues/"+ queueId;
+    }
 
+    @PostMapping("/queues/remove_user")
+    private String removeUser(HttpSession session,
+                            @RequestParam int queueId) {
+        UserResponse user =(UserResponse) session.getAttribute("user");
+        if (user == null){
+            return "redirect:/";
+        }
+        queueService.deleteUserFromQueue(queueId, user.getId());
+        return "redirect:/queues/"+ queueId;
+    }
 
+    @PostMapping("/queues/change_closeable")
+    private String changeCloseable(HttpSession session,
+                              @RequestParam int queueId,
+                              @RequestParam boolean value) {
+        UserResponse user =(UserResponse) session.getAttribute("user");
+        if (user == null){
+            return "redirect:/";
+        }
+        Optional<Queue> queueOpt = queueService.getQueueById(queueId);
+        if (queueOpt.isEmpty()){
+            return "redirect:/";
+        }
+        if (user.getId() != queueOpt.get().getOwner().getId()){
+            return "redirect:/";
+        }
+        queueService.changeCloseable(queueId, value);
+        return "redirect:/queues/"+ queueId;
+    }
 
 
 }

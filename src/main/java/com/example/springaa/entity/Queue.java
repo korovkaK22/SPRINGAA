@@ -8,8 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-
-
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -33,13 +32,13 @@ public class Queue {
     @JoinColumn(name="owner_id", referencedColumnName = "id")
     User owner;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "queue_lists",
-            joinColumns = @JoinColumn(name = "queue_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<User> users;
+//    @ManyToMany(cascade = CascadeType.ALL)
+//    @JoinTable(
+//            name = "queue_lists",
+//            joinColumns = @JoinColumn(name = "queue_id"),
+//            inverseJoinColumns = @JoinColumn(name = "user_id")
+//    )
+//    private List<User> users;
 
     public boolean getIsOpen() {
         return this.isOpen;
@@ -52,6 +51,6 @@ public class Queue {
                 ", name='" + name + '\'' +
                 ", isOpen=" + isOpen +
                 ", owner=" + owner.getUsername() +
-                '}';
+                "}";
     }
 }

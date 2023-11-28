@@ -21,7 +21,7 @@
 
 </head>
 <body>
-<jsp:include page="../header.jsp" />
+<jsp:include page="../header.jsp"/>
 
 <div class="centerSign">
     Черга "<c:out value="${queue.name}"/>"<c:if test="${queue.isOpen == false}">(Закрита)</c:if>
@@ -34,7 +34,7 @@
 <div class="queue-list">
 
     <c:choose>
-        <c:when test="${queue.users.size()==0}">
+        <c:when test="${users.size()==0}">
             <div class="queue-introduction">
                 Ще ніхто не записався у цю чергу.<br> Але ви можете це виправити!
             </div>
@@ -46,7 +46,7 @@
                     <th>Номер</th>
                     <th>Ім'я</th>
                 </tr>
-                <c:forEach items="${queue.users}" var="user" varStatus="status">
+                <c:forEach items="${users}" var="user" varStatus="status">
                     <tr>
                         <td>${status.index + 1}</td>
                         <td class="user-name"><c:out value="${user.username}"/></td>
@@ -60,6 +60,7 @@
 
 <%--Внизу кнопочки--%>
 
+
 <c:if test="${sessionScope.user == null}">
     <div class="queue-introduction">
         Для запис в чергу потрібно <br> <a href="/login"> авторизуватися </a>
@@ -68,21 +69,48 @@
 
 
 <c:if test="${sessionScope.user != null}">
+<c:if test="${isInQueue ==false}">
 <div class="buttons">
-        <form action="/your-target-page">
+        <c:if test="${queue.isOpen == true}">
+        <form action="/queues/add_user" method="post">
+            <input type="hidden" name="queueId" value="${queue.id}">
             <button type="submit">Записатися</button>
         </form>
-    <c:if test="${sessionScope.user.id == queue.owner.id}">
-        <form action="/your-target-page">
-            <button type="submit">Закрити чергу</button>
+        </c:if>
+        <c:if test="${queue.isOpen == false}">
+        <form>
+            <button id="disabled-button" disabled type="submit">Черга закрита</button>
         </form>
-        <form action="/your-target-page">
-            <button type="submit">Здвинути чергу</button>
-        </form>
+        </c:if>
     </c:if>
-</div>
-</c:if>
-
+    <c:if test="${isInQueue ==true}">
+    <div class="buttons">
+        <form action="/queues/remove_user" method="post">
+            <input type="hidden" name="queueId" value="${queue.id}">
+            <button type="submit">Вийти з черги</button>
+        </form>
+        </c:if>
+        <c:if test="${sessionScope.user.id == queue.owner.id}">
+            <c:if test="${queue.isOpen == true}">
+                <form action="/queues/change_closeable" method="post">
+                    <input type="hidden" name="queueId" value="${queue.id}">
+                    <input type="hidden" name="value" value="false">
+                    <button type="submit">Закрити чергу</button>
+                </form>
+            </c:if>
+            <c:if test="${queue.isOpen == false}">
+                <form action="/queues/change_closeable" method="post">
+                    <input type="hidden" name="queueId" value="${queue.id}">
+                    <input type="hidden" name="value" value="true">
+                    <button id="open-queue-button" type="submit">Відкрити чергу</button>
+                </form>
+            </c:if>
+            <form action="/your-target-page" method="post">
+                <button id="mode-queue-button" type="submit">Здвинути чергу</button>
+            </form>
+        </c:if>
+    </div>
+    </c:if>
 
 
 </body>

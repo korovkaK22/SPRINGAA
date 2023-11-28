@@ -96,3 +96,15 @@ button {
 .buttons form:nth-child(3) button:hover {
     background-color: #730404;
 }
+
+#disabled-button{
+    background-color: #395c8d;
+}
+
+#open-queue-button{
+    background-color: #1a8f1b;
+}
+
+#mode-queue-button{
+    background-color:  #042a5d;
+}

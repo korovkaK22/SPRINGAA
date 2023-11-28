@@ -24,13 +24,13 @@ public class User {
     @NotNull
     private String password;
 
-    //Він є овнером в цих чергах
-    @OneToMany(mappedBy = "owner",cascade = CascadeType.ALL)
-    private List<Queue> queuesOwner;
-
-    //Він просто є в цих чергах
-    @ManyToMany(mappedBy = "users",cascade = CascadeType.ALL)
-    private List<Queue> queuesGuest;
+//    //Він є овнером в цих чергах
+//    @OneToMany(mappedBy = "owner",cascade = CascadeType.ALL)
+//    private List<Queue> queuesOwner;
+//
+//    //Він просто є в цих чергах
+//    @ManyToMany(mappedBy = "users",cascade = CascadeType.ALL)
+//    private List<Queue> queuesGuest;
 
 
     @Override
