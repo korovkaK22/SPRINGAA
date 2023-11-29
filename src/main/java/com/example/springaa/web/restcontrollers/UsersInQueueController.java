@@ -41,6 +41,8 @@ public class UsersInQueueController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Added"),
+            @ApiResponse(responseCode = "203", description = "Unauthorized"),
+            @ApiResponse(responseCode = "409", description = "Conflict (User already in queue)"),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)
     })
     @PostMapping("/{id}")
@@ -58,7 +60,18 @@ public class UsersInQueueController {
         }
     }
 
-
+    @Operation(
+            summary = "Delete user from Queue",
+            description = "Add authorized user to specific queue. For this action session need bo be authorized." +
+                    "When operation is succeed, return also \"Location\" of queue in headers",
+            parameters = {@Parameter(name = "id", description = "Queue Id", example = "2")}
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Added"),
+            @ApiResponse(responseCode = "203", description = "Unauthorized"),
+            @ApiResponse(responseCode = "409", description = "Conflict (User already in queue)"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)
+    })
     @DeleteMapping("/{id}/delete_user")
     private ResponseEntity<Void> removeUserFromQueue(@PathVariable @Positive Integer id,
                                                      @RequestParam @Positive int userId,
