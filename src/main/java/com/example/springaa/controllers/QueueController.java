@@ -6,9 +6,10 @@ import com.example.springaa.entity.Queue;
 import com.example.springaa.entity.QueueResponse;
 import com.example.springaa.entity.UserResponse;
 import com.example.springaa.services.QueueService;
-import com.example.springaa.util.QueueChangingValidation;
+import com.example.springaa.util.QueuesAccessValidation;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -25,11 +26,12 @@ import java.util.Optional;
 @AllArgsConstructor
 public class QueueController {
     private final QueueService queueService;
-    private final QueueChangingValidation queueChangingValidation;
+    private final QueuesAccessValidation validation;
 
 
     @GetMapping("/queues/{id}")
-    private String homepage(Model model, @PathVariable Integer id, HttpSession session){
+    private String homepage(Model model, @PathVariable @Positive Integer id, HttpSession session){
+
         Optional<Queue> queueOpt= queueService.getQueueById(id);
         if (queueOpt.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Queue not found");
@@ -49,7 +51,7 @@ public class QueueController {
 
     @PostMapping("/queues/add_user")
     private String addUser(HttpSession session,
-                            @RequestParam int queueId) {
+                            @RequestParam @Positive int queueId) {
         UserResponse user =(UserResponse) session.getAttribute("user");
         if (user == null){
             return "redirect:/";
@@ -60,9 +62,9 @@ public class QueueController {
 
     @PostMapping("/queues/remove_user_from_position")
     private String removeUserFromPosition(HttpSession session,
-                           @RequestParam int queueId,
-                           @RequestParam int position) {
-        if (!queueChangingValidation.validatePermissions(session, queueId)){
+                           @RequestParam @Positive int queueId,
+                           @RequestParam @Positive int position) {
+        if (validation.isUserOwnerOfQueue(session, queueId).isPresent()){
             return "redirect:/";
         }
         queueService.deleteUserFromPositionInQueue(queueId, position);
@@ -71,20 +73,21 @@ public class QueueController {
 
     @PostMapping("/queues/remove_user")
     private String removeUser(HttpSession session,
-                            @RequestParam int queueId) {
-        UserResponse user =(UserResponse) session.getAttribute("user");
-        if (user == null){
+                            @RequestParam @Positive int queueId) {
+        if (validation.isUserAuthorized(session).isPresent()){
             return "redirect:/";
         }
+
+        UserResponse user =(UserResponse) session.getAttribute("user");
         queueService.deleteUserFromQueue(queueId, user.getId());
         return "redirect:/queues/"+ queueId;
     }
 
     @PostMapping("/queues/change_closeable")
     private String changeCloseable(HttpSession session,
-                              @RequestParam int queueId,
+                              @RequestParam @Positive int queueId,
                               @RequestParam boolean value) {
-        if (!queueChangingValidation.validatePermissions(session, queueId)){
+        if (validation.isUserOwnerOfQueue(session, queueId).isPresent()){
             return "redirect:/";
         }
         queueService.changeCloseable(queueId, value);
@@ -93,8 +96,8 @@ public class QueueController {
 
     @PostMapping("/queues/move_user")
     private String moveUser(HttpSession session,
-                                   @RequestParam int queueId) {
-        if (!queueChangingValidation.validatePermissions(session, queueId)){
+                            @RequestParam @Positive int queueId) {
+        if (validation.isUserOwnerOfQueue(session, queueId).isPresent()){
             return "redirect:/";
         }
         queueService.moveQueue(queueId);
@@ -105,14 +108,14 @@ public class QueueController {
     @PostMapping("/queues/create")
     private String createQueue(HttpSession session,
                             @RequestParam @NotBlank String name) {
-        UserResponse user =(UserResponse) session.getAttribute("user");
-        if (user == null){
+        if (validation.isUserAuthorized(session).isPresent()){
             return "redirect:/";
         }
-
+        UserResponse user =(UserResponse) session.getAttribute("user");
         QueueResponse queue = queueService.createQueue(name, user.getId());
         return "redirect:/queues/"+ queue.getId();
     }
+
 
     @GetMapping("/queues/create")
     private String getCreateQueuePage(HttpSession session,

@@ -57,6 +57,8 @@ public class QueueService {
         return false;
     }
 
+
+
     public boolean deleteQueue(int id){
         return jdbcQueueRepository.delete(id);
     }
@@ -70,7 +72,7 @@ public class QueueService {
      * - не додасть юзера, якщо він вже є в черзі
      * @param queueId id черги, в яку треба додати
      * @param userId id юзера для додавання
-     * @return місце користувача або -1, при незнайденні місця
+     * @return мчи добавило юзера
      */
     public boolean addUserToQueue(int queueId, int userId){
         Optional<Queue> queueOpt = queueRepository.findById(queueId);

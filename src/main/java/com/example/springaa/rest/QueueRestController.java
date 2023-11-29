@@ -1,4 +1,4 @@
-package com.example.springaa.controllers.rest;
+package com.example.springaa.rest;
 
 import com.example.springaa.entity.Queue;
 import com.example.springaa.entity.QueueResponse;
@@ -6,8 +6,10 @@ import com.example.springaa.entity.UserResponse;
 import com.example.springaa.repositories.QueueRepository;
 import com.example.springaa.services.AuthorizationService;
 import com.example.springaa.services.QueueService;
+import com.example.springaa.util.QueuesAccessValidation;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,9 @@ public class QueueRestController {
     @Autowired
     AuthorizationService authorizationService;
     @Autowired
-    QueueRepository queueRepository;
+    QueuesAccessValidation validation;
+
+
 
     @PostMapping()
     private ResponseEntity<QueueResponse> createQueue(@RequestParam @NotBlank String name, HttpSession session) {
@@ -50,13 +54,13 @@ public class QueueRestController {
     }
 
 
-    @PutMapping("/change_name")
+    @PutMapping()
     private ResponseEntity<QueueResponse> changeQueue(@RequestParam @NotBlank String newName,
-                                                      @RequestParam int id,
+                                                      @RequestParam @Positive int id,
                                                       HttpSession session) {
-        Optional<ResponseEntity.BodyBuilder> validate = new  Validator().checksOfPermissionsOfQueue(id, session);
-        if (validate.isPresent()){
-            return  validate.get().build();
+        Optional<HttpStatus> valid = validation.isUserOwnerOfQueue(session, id);
+        if (valid.isPresent()){
+            return ResponseEntity.status(valid.get()).build();
         }
         //Оновлення черги
         Optional<Queue> resultOpt = queueService.updateName(id, newName);
@@ -66,35 +70,17 @@ public class QueueRestController {
 
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<Void> deleteQueue(@PathVariable Integer id, HttpSession session) {
-        Optional<ResponseEntity.BodyBuilder> validate = new  Validator().checksOfPermissionsOfQueue(id, session);
-        return validate.<ResponseEntity<Void>>map(ResponseEntity.HeadersBuilder::build).orElseGet(() -> queueService.deleteQueue(id) ?
+    private ResponseEntity<Void> deleteQueue(@PathVariable @Positive Integer id, HttpSession session) {
+        Optional<HttpStatus> valid = validation.isUserOwnerOfQueue(session, id);
+        if (valid.isPresent()){
+            return ResponseEntity.status(valid.get()).build();
+        }
+        return  queueService.deleteQueue(id) ?
                 ResponseEntity.ok().build() :
-                ResponseEntity.internalServerError().build());
+                ResponseEntity.internalServerError().build();
 
     }
 
-   //======== Міні-валідація =========
-   private class Validator{
-       private Optional<ResponseEntity.BodyBuilder> checksOfPermissionsOfQueue(Integer queueId, HttpSession session) {
-           //Перевірка, чи авторизований користувач
-           UserResponse user = (UserResponse) session.getAttribute("user");
-           if (user == null) {
-               return Optional.of(ResponseEntity.status(HttpStatus.UNAUTHORIZED)); //401
-           }
-           //Перевірка, чи є така черга
-           Optional<Queue> queueOpt = queueService.getQueueById(queueId);
-           if (queueOpt.isEmpty()) {
-               return Optional.of(ResponseEntity.status(HttpStatus.NOT_FOUND)); //404
-           }
-           //Перевірка, чи є користувач овнером черги
-           if (queueOpt.get().getOwner().getId() != user.getId()) {
-               return Optional.of(ResponseEntity.status(HttpStatus.FORBIDDEN)); //403
-           }
-           return Optional.empty();
-       }
-
-   }
-}
+  }
 
 

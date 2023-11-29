@@ -1,4 +1,4 @@
-package com.example.springaa.controllers.rest;
+package com.example.springaa.rest;
 
 import com.example.springaa.entity.UserResponse;
 import com.example.springaa.services.AuthorizationService;

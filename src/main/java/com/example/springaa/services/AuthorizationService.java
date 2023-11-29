@@ -3,6 +3,7 @@ package com.example.springaa.services;
 import com.example.springaa.entity.User;
 import com.example.springaa.entity.UserResponse;
 import com.example.springaa.repositories.UserRepository;
+import com.example.springaa.security.PasswordHasher;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @Transactional
 public class AuthorizationService {
-
+    private PasswordHasher passwordHasher;
     private UserRepository userDAO;
 
     /**
@@ -24,7 +25,9 @@ public class AuthorizationService {
      */
     public Optional<UserResponse> checkUser(String username, String password){
         Optional<User> user = userDAO.getUserByUsernameIgnoreCase(username);
-        if (user.isPresent() && user.get().getPassword().equals(password)){
+        String a = user.get().getPassword();
+
+        if (user.isPresent() && passwordHasher.checkPasswords(password,a)){
             return user.map(UserResponse::new);
         }
         return Optional.empty();
@@ -34,5 +37,6 @@ public class AuthorizationService {
         Optional<User> user = userDAO.getUserByUsernameIgnoreCase(username);
         return user.isPresent();
     }
+
 
 }
