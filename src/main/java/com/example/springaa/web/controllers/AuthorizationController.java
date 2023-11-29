@@ -1,13 +1,12 @@
-package com.example.springaa.controllers;
+package com.example.springaa.web.controllers;
 
-import com.example.springaa.entity.UserResponse;
+import com.example.springaa.web.dto.UserResponse;
 import com.example.springaa.services.AuthorizationService;
 import com.example.springaa.services.UserService;
 import com.example.springaa.util.UserValidation;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -11,12 +11,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class SpringApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext context =  org.springframework.boot.SpringApplication.run(SpringApplication.class, args);
-        PasswordHasherImpl p =  context.getBean("getPasswordHasher", PasswordHasherImpl.class);
-
-        System.out.println(
-                p.checkPasswords("test", "$2a$12$hh9LDYWcKVWRnRkEkVOXWeFzSi4vJOFHjvBGbfb7.OxdVZCQCkfNK"));
+        ConfigurableApplicationContext context = org.springframework.boot.SpringApplication.run(SpringApplication.class, args);
+        PasswordHasherImpl p = context.getBean("getPasswordHasher", PasswordHasherImpl.class);
     }
-
 
 }

@@ -1,6 +1,6 @@
-package com.example.springaa.rest;
+package com.example.springaa.web.rest;
 
-import com.example.springaa.entity.UserResponse;
+import com.example.springaa.web.dto.UserResponse;
 import com.example.springaa.services.AuthorizationService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;

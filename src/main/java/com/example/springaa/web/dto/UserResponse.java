@@ -1,5 +1,6 @@
-package com.example.springaa.entity;
+package com.example.springaa.web.dto;
 
+import com.example.springaa.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

@@ -1,7 +1,7 @@
 package com.example.springaa.util;
 
 import com.example.springaa.entity.Queue;
-import com.example.springaa.entity.UserResponse;
+import com.example.springaa.web.dto.UserResponse;
 import com.example.springaa.services.QueueService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;

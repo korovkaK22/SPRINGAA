@@ -1,4 +1,4 @@
-package com.example.springaa.controllers;
+package com.example.springaa.web.controllers;
 
 import com.example.springaa.entity.Queue;
 import com.example.springaa.entity.User;

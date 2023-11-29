@@ -1,7 +1,7 @@
 package com.example.springaa.services;
 
 import com.example.springaa.entity.User;
-import com.example.springaa.entity.UserResponse;
+import com.example.springaa.web.dto.UserResponse;
 import com.example.springaa.repositories.UserRepository;
 import com.example.springaa.security.PasswordHasher;
 import jakarta.transaction.Transactional;
@@ -25,9 +25,7 @@ public class AuthorizationService {
      */
     public Optional<UserResponse> checkUser(String username, String password){
         Optional<User> user = userDAO.getUserByUsernameIgnoreCase(username);
-        String a = user.get().getPassword();
-
-        if (user.isPresent() && passwordHasher.checkPasswords(password,a)){
+       if (user.isPresent() && passwordHasher.checkPasswords(password,user.get().getPassword())){
             return user.map(UserResponse::new);
         }
         return Optional.empty();

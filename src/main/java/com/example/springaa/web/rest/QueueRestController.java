@@ -1,9 +1,8 @@
-package com.example.springaa.rest;
+package com.example.springaa.web.rest;
 
 import com.example.springaa.entity.Queue;
-import com.example.springaa.entity.QueueResponse;
-import com.example.springaa.entity.UserResponse;
-import com.example.springaa.repositories.QueueRepository;
+import com.example.springaa.web.dto.QueueResponse;
+import com.example.springaa.web.dto.UserResponse;
 import com.example.springaa.services.AuthorizationService;
 import com.example.springaa.services.QueueService;
 import com.example.springaa.util.QueuesAccessValidation;

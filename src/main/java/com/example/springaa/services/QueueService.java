@@ -2,7 +2,7 @@ package com.example.springaa.services;
 
 
 import com.example.springaa.entity.Queue;
-import com.example.springaa.entity.QueueResponse;
+import com.example.springaa.web.dto.QueueResponse;
 import com.example.springaa.entity.User;
 import com.example.springaa.repositories.JDBCQueueRepository;
 import com.example.springaa.repositories.QueueRepository;

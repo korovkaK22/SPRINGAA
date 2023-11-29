@@ -1,10 +1,10 @@
-package com.example.springaa.controllers;
+package com.example.springaa.web.controllers;
 
 
 
 import com.example.springaa.entity.Queue;
-import com.example.springaa.entity.QueueResponse;
-import com.example.springaa.entity.UserResponse;
+import com.example.springaa.web.dto.QueueResponse;
+import com.example.springaa.web.dto.UserResponse;
 import com.example.springaa.services.QueueService;
 import com.example.springaa.util.QueuesAccessValidation;
 import jakarta.servlet.http.HttpSession;

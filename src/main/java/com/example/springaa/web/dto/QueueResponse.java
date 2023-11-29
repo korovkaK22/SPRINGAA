@@ -1,5 +1,6 @@
-package com.example.springaa.entity;
+package com.example.springaa.web.dto;
 
+import com.example.springaa.entity.Queue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -15,7 +16,7 @@ public class QueueResponse {
         this.id = queue.getId();
         this.name = queue.getName();
         this.isOpen = queue.getIsOpen();
-        this.owner = new UserResponse(queue.owner);
+        this.owner = new UserResponse(queue.getOwner());
     }
 
 }

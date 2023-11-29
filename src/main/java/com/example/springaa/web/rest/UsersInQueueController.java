@@ -1,15 +1,12 @@
-package com.example.springaa.rest;
+package com.example.springaa.web.rest;
 
-import com.example.springaa.entity.Queue;
-import com.example.springaa.entity.QueueResponse;
-import com.example.springaa.entity.UserResponse;
+import com.example.springaa.web.dto.UserResponse;
 import com.example.springaa.services.AuthorizationService;
 import com.example.springaa.services.QueueService;
 import com.example.springaa.util.QueuesAccessValidation;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
