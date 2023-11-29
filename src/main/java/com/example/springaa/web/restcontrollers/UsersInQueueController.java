@@ -32,6 +32,17 @@ public class UsersInQueueController {
         return ResponseEntity.ok(queueService.getAllUsersInQueue(id).stream().map(UserResponse::new).toList());
     }
 
+
+    @Operation(
+            summary = "Add user to Queue",
+            description = "Add authorized user to specific queue. For this action session need bo be authorized." +
+                    "When operation is succeed, return also \"Location\" of queue in headers",
+            parameters = {@Parameter(name = "id", description = "Queue Id", example = "2")}
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Added"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)
+    })
     @PostMapping("/{id}")
     private ResponseEntity<Void> addUserToQueue(@PathVariable @Positive Integer id, HttpSession session) {
         Optional<HttpStatus> valid = validation.isUserAuthorizedAndQueueExist(session, id);

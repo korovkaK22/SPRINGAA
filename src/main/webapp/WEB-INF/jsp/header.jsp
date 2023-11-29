@@ -20,7 +20,7 @@
 <header>
     <nav>
         <div class="nav-item"><a href="/">На Головну</a></div>
-        <div class="nav-item"><a href="/"><c:if test="${sessionScope.user != null}">Мої черги</c:if></a></div>
+        <div class="nav-item"><a href="/queues/user_queues"><c:if test="${sessionScope.user != null}">Мої черги</c:if></a></div>
         <div class="nav-item"><a href="/queues/create"><c:if test="${sessionScope.user != null}">Створити чергу</c:if></a></div>
         <c:if test="${sessionScope.user == null}">
             <div class="nav-item"><a href="/login">Увійти</a></div>

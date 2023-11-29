@@ -35,9 +35,15 @@ public class LoginRestController {
 
     @PostMapping("/logout")
     private ResponseEntity<Void> logoutRequest(HttpSession session) {
+        //Перевірка, чи авторизований користувач
+        UserResponse user = (UserResponse) session.getAttribute("user");
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); //401
+        }
         session.removeAttribute("user");
         return ResponseEntity.ok().build(); //200
     }
+
 
     @Autowired
     public void setAuthorizationService(AuthorizationService authorizationService) {

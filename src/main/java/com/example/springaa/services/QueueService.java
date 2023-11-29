@@ -38,6 +38,10 @@ public class QueueService {
         return getAllUsersInQueue(queueId).stream().anyMatch(u -> u.getId() == userId);
     }
 
+    public List<Queue> getAllQueuesByUser(int userId) {
+       return queueRepository.findByOwnerId(userId);
+    }
+
     public List<User> getAllUsersInQueue(int queueId){
         List<Integer> usersId = jdbcQueueRepository.getAllUsersIdInQueue(queueId);
         List<User> result = new LinkedList<>();

@@ -116,6 +116,17 @@ public class QueueController {
         return "redirect:/queues/"+ queue.getId();
     }
 
+    //===================
+    @GetMapping("/queues/user_queues")
+    private String viewUsersQueue(HttpSession session, Model model) {
+        UserResponse user = (UserResponse) session.getAttribute("user");
+        model.addAttribute("user", user) ;
+        if (user != null) {
+            model.addAttribute("queues", queueService.getAllQueuesByUser(user.getId())) ;
+        }
+
+        return "/WEB-INF/jsp/queue/userQueuesPage.jsp";
+    }
 
     @GetMapping("/queues/create")
     private String getCreateQueuePage(HttpSession session,

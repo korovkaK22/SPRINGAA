@@ -12,6 +12,8 @@ import java.util.List;
 public interface QueueRepository extends JpaRepository<Queue, Integer> {
 
     @Query("SELECT q FROM Queue q WHERE q.id IN :ids ORDER BY q.id DESC")
-    public List<Queue> getAllQueueByIds(List<Integer> ids);
+    List<Queue> getAllQueueByIds(List<Integer> ids);
+
+    List<Queue> findByOwnerId(Integer ownerId);
 
 }
