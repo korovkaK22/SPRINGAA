@@ -29,7 +29,7 @@ public class QueuesAccessValidation {
             return result;
         }
         //Перевірка, чи є користувач овнером черги
-        if (queueService.getQueueById(queueId).get().getOwner().getId() != ((UserResponse)session.getAttribute("user")).getId()) {
+        if (queueService.getQueueById(queueId).getOwner().getId() != ((UserResponse)session.getAttribute("user")).getId()) {
             return Optional.of(HttpStatus.FORBIDDEN); //403
         }
         return Optional.empty();
@@ -71,10 +71,7 @@ public class QueuesAccessValidation {
      * @return empty, якщо все вірно, статус код в іншому випадку
      */
     public Optional<HttpStatus> isQueueExist(int queueId){
-        Optional<Queue> queueOpt = queueService.getQueueById(queueId);
-        if (queueOpt.isEmpty()) {
-            return Optional.of(HttpStatus.NOT_FOUND); //404
-        }
+        Queue queueOpt = queueService.getQueueById(queueId);
         return Optional.empty();
     }
 

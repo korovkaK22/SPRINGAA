@@ -1,10 +1,14 @@
 package com.example.springaa.web.restcontrollers;
 
+import com.example.springaa.exceptions.InvalidPasswordException;
+import com.example.springaa.exceptions.NotAuthorizedException;
+import com.example.springaa.exceptions.UserNotFoundException;
 import com.example.springaa.web.dto.UserResponse;
 import com.example.springaa.services.AuthorizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,21 +36,23 @@ public class LoginRestController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Success - User logged in successfully."),
-            @ApiResponse(responseCode = "401", description = "UnAuthorized - Login failed due to invalid credentials.", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Not Found - No user found with the provided username.", content = @Content)
+            @ApiResponse(responseCode = "401", description = "UnAuthorized - Login failed due to invalid credentials.",
+                    content = @Content(schema = @Schema(implementation = NotAuthorizedException.class))),
+            @ApiResponse(responseCode = "404", description = "Not Found - No user found with the provided username.",
+                    content = @Content(schema = @Schema(implementation = UserNotFoundException.class)))
     })
     @PostMapping("/login")
     private ResponseEntity<String> loginPage(@RequestParam String username,
                                              @RequestParam String password, HttpSession session) {
         //Перевірка, чи такий юзер існує
         if (!authorizationService.isUserExist(username)) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND); //404
+           throw new UserNotFoundException("There is no users with this name");
         }
 
         //Спроба логінізації
         Optional<UserResponse> user = authorizationService.checkUser(username, password);
         if (user.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); //401
+          throw new InvalidPasswordException("Password is incorrect");
         }
         session.setAttribute("user", user.get());
         return ResponseEntity.ok(session.getId()); //200
@@ -60,14 +66,15 @@ public class LoginRestController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Success - User logged out successfully."),
-            @ApiResponse(responseCode = "401", description = "UnAuthorized - Logout failed: user was not logged in.")
+            @ApiResponse(responseCode = "401", description = "UnAuthorized - Logout failed: user was not logged in.",
+            content = @Content(schema = @Schema(implementation = NotAuthorizedException.class)))
     })
     @PostMapping("/logout")
     private ResponseEntity<Void> logoutRequest(HttpSession session) {
         //Перевірка, чи авторизований користувач
         UserResponse user = (UserResponse) session.getAttribute("user");
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); //401
+            throw new NotAuthorizedException("You was not login");
         }
         session.removeAttribute("user");
         return ResponseEntity.ok().build(); //200

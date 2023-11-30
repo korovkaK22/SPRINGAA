@@ -2,6 +2,8 @@ package com.example.springaa.services;
 
 
 import com.example.springaa.entity.Queue;
+import com.example.springaa.exceptions.ResourceNotFoundException;
+import com.example.springaa.exceptions.RestQueueNotFoundException;
 import com.example.springaa.web.dto.QueueResponse;
 import com.example.springaa.entity.User;
 import com.example.springaa.repositories.JDBCQueueRepositoryImpl;
@@ -24,9 +26,22 @@ public class QueueService {
     private final JDBCQueueRepositoryImpl jdbcQueueRepository;
     private final UserRepository userRepository;
 
-    public Optional<Queue> getQueueById(int id) {
-        return queueRepository.findById(id);
+    public Queue getQueueById(int id) {
+        Optional<Queue> result = queueRepository.findById(id);
+        if (result.isEmpty()){
+            throw new ResourceNotFoundException("There is no such queue with this id");
+        }
+        return result.get();
     }
+
+    public Queue getRestQueueById(int id) {
+        Optional<Queue> result = queueRepository.findById(id);
+        if (result.isEmpty()){
+            throw new RestQueueNotFoundException("There is no such queue with this id");
+        }
+        return result.get();
+    }
+
 
     public Optional<Queue> updateName(int id, String name) {
         Optional<Queue> queueOpt = queueRepository.findById(id);
@@ -51,6 +66,7 @@ public class QueueService {
         }
         return result;
     }
+
 
     public boolean changeCloseable(int id, boolean value){
         Optional<Queue> queueOpt = queueRepository.findById(id);

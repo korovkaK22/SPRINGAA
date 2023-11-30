@@ -2,10 +2,12 @@ package com.example.springaa.web.controllers;
 
 import com.example.springaa.entity.Queue;
 import com.example.springaa.entity.User;
+import com.example.springaa.exceptions.ResourceNotFoundException;
 import com.example.springaa.repositories.QueueRepository;
 import com.example.springaa.repositories.UserRepository;
 import com.example.springaa.services.HomeServices;
 import com.example.springaa.services.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +27,13 @@ public class HomeController {
 
 
     @GetMapping("/")
-    private String homepage(Model model){
+    private String homepage(Model model) {
         model.addAttribute("lastQueues", homeServices.findLastQueues(5));
 
 
         return "/WEB-INF/jsp/homePage.jsp";
-        }
+    }
+
+
 
 }

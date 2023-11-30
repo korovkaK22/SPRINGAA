@@ -43,17 +43,6 @@
     </div>
 
 
-    <div class="buttons">
-        <div class="button">
-
-        </div>
-        <div class="button">
-        </div>
-
-    </div>
-
-
-
 
 </body>
 </html>
