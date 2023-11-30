@@ -12,6 +12,22 @@ import org.springframework.context.ConfigurableApplicationContext;
 import java.net.URI;
 import java.util.Optional;
 
+
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Online queries",
+                contact = @Contact(
+                        name = "Sereda Andrii",
+                        email = "email@gmail.com"
+                ),
+                description = "MyOpen",
+                version = "2.2.0"
+        ),
+        servers = {
+                @Server(url = "http://localhost:8080", description = "test server"),
+                @Server(url = "http://example.com", description = "production server")
+        }
+)
 @SpringBootApplication
 public class SpringApplication {
 

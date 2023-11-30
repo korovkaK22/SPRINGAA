@@ -4,6 +4,13 @@ import com.example.springaa.web.dto.UserResponse;
 import com.example.springaa.services.AuthorizationService;
 import com.example.springaa.services.QueueService;
 import com.example.springaa.util.QueuesAccessValidation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -17,12 +24,21 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/rest/queues")
 @AllArgsConstructor
+@Tag(name = "User in Queue", description = "In this class we do CRUD operations with Users on Queues")
 public class UsersInQueueController {
     QueueService queueService;
     AuthorizationService authorizationService;
     QueuesAccessValidation validation;
 
-
+    @Operation(
+            summary = "Get all Users in queue",
+            description = "Get all Users in specific Queue",
+            parameters = {@Parameter(name = "id", description = "Queue Id", example = "2")}
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Success"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)
+    })
     @GetMapping("/{id}/users")
     private ResponseEntity<List<UserResponse>> viewUsersInQueue(@PathVariable Integer id) {
         Optional<HttpStatus> valid = validation.isQueueExist(id);
