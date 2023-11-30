@@ -41,8 +41,8 @@ public class UsersInQueueController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Added"),
-            @ApiResponse(responseCode = "203", description = "Unauthorized"),
-            @ApiResponse(responseCode = "409", description = "Conflict (User already in queue)"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Conflict (User already in queue)", content = @Content),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)
     })
     @PostMapping("/{id}")
@@ -65,14 +65,12 @@ public class UsersInQueueController {
 
     @Operation(
             summary = "Delete user from Queue",
-            description = "Add authorized user to specific queue. For this action session need bo be authorized." +
-                    "When operation is succeed, return also \"Location\" of queue in headers",
+            description = "Delete authorized user to specific queue. For this action session need bo be authorized.",
             parameters = {@Parameter(name = "id", description = "Queue Id", example = "2")}
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Added"),
-            @ApiResponse(responseCode = "203", description = "Unauthorized"),
-            @ApiResponse(responseCode = "409", description = "Conflict (User already in queue)"),
+            @ApiResponse(responseCode = "200", description = "Deleted"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)
     })
     @DeleteMapping("/{id}/delete_user")
@@ -91,10 +89,22 @@ public class UsersInQueueController {
         }
     }
 
+
+    @Operation(
+            summary = "Move Queue",
+            description = "Move Queue (delete first User in query). That can make only User, that is Queue owner",
+            parameters = {@Parameter(name = "id", description = "Queue Id", example = "2")}
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Moved"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "403", description = "No Access (Not an owner)", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)
+    })
     @DeleteMapping("/{id}/move")
     private ResponseEntity<Void> moveUsersInQueue(@PathVariable @Positive Integer id,
                                                      HttpSession session) {
-        Optional<HttpStatus> valid = validation.isUserAuthorizedAndQueueExist(session, id);
+        Optional<HttpStatus> valid = validation.isUserOwnerOfQueue(session, id);
         if (valid.isPresent()){
             return ResponseEntity.status(valid.get()).build();
         }

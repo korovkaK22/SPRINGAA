@@ -4,7 +4,7 @@ package com.example.springaa.services;
 import com.example.springaa.entity.Queue;
 import com.example.springaa.web.dto.QueueResponse;
 import com.example.springaa.entity.User;
-import com.example.springaa.repositories.JDBCQueueRepository;
+import com.example.springaa.repositories.JDBCQueueRepositoryImpl;
 import com.example.springaa.repositories.QueueRepository;
 import com.example.springaa.repositories.UserRepository;
 import jakarta.transaction.Transactional;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class QueueService {
 
     private final QueueRepository queueRepository;
-    private final JDBCQueueRepository jdbcQueueRepository;
+    private final JDBCQueueRepositoryImpl jdbcQueueRepository;
     private final UserRepository userRepository;
 
     public Optional<Queue> getQueueById(int id) {

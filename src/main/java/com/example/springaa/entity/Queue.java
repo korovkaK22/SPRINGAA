@@ -15,6 +15,10 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @ToString
+@NamedQuery(
+        name = "Queue.myCustomNamedQuery",
+        query = "SELECT q FROM Queue q WHERE q.id = :id"
+)
 public class Queue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
