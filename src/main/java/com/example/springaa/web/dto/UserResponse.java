@@ -4,6 +4,7 @@ import com.example.springaa.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+
 @Data
 @AllArgsConstructor
 public class UserResponse {

@@ -14,3 +14,4 @@ public class PasswordHasherImpl implements PasswordHasher {
         return BCrypt.checkpw(password, hashedPassword);
     }
 }
+

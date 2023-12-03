@@ -12,6 +12,7 @@ import com.example.springaa.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +22,6 @@ import java.util.Optional;
 @Transactional
 @AllArgsConstructor
 public class QueueService {
-
     private final QueueRepository queueRepository;
     private final JDBCQueueRepositoryImpl jdbcQueueRepository;
     private final UserRepository userRepository;
@@ -41,7 +41,6 @@ public class QueueService {
         }
         return result.get();
     }
-
 
     public Optional<Queue> updateName(int id, String name) {
         Optional<Queue> queueOpt = queueRepository.findById(id);
@@ -76,7 +75,6 @@ public class QueueService {
         }
         return false;
     }
-
 
 
     public boolean deleteQueue(int id){

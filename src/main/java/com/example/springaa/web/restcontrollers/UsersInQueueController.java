@@ -1,6 +1,7 @@
 package com.example.springaa.web.restcontrollers;
 
 import com.example.springaa.entity.Queue;
+import com.example.springaa.entity.User;
 import com.example.springaa.exceptions.ForbiddenAccessException;
 import com.example.springaa.exceptions.NotAuthorizedException;
 import com.example.springaa.exceptions.ResourceNotFoundException;
@@ -16,12 +17,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/rest/queues")
@@ -34,8 +39,10 @@ public class UsersInQueueController {
 
     @Operation(
             summary = "Get all Users in queue",
-            description = "Get all Users in specific Queue",
-            parameters = {@Parameter(name = "id", description = "Queue Id", example = "2")}
+            description = "Get all Users in specific Queue. Extra parameters can be used for concretize request",
+            parameters = {@Parameter(name = "id", description = "Queue Id", example = "2"),
+                            @Parameter(name = "page", description = "(Extra) Page number", example = "3"),
+                            @Parameter(name = "size", description = "(Extra) Number of users in single page", example = "5")}
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Success"),
@@ -43,10 +50,29 @@ public class UsersInQueueController {
                     content = @Content(schema = @Schema(implementation = ResourceNotFoundException.class)))
     })
     @GetMapping("/{id}/users")
-    private ResponseEntity<List<UserResponse>> viewUsersInQueue(@PathVariable Integer id) {
-        //Перевірка, чи існує черга
+    public ResponseEntity<List<UserResponse>> viewUsersInQueue(@PathVariable Integer id,
+                                                               @RequestParam(defaultValue = "1") @Min(1) int page,
+                                                               @RequestParam(defaultValue = "5") @Positive int size) {
+        // Перевірка, чи існує черга
         queueService.getRestQueueById(id);
-        return ResponseEntity.ok(queueService.getAllUsersInQueue(id).stream().map(UserResponse::new).toList());
+
+        // Всі юзери
+        List<UserResponse> list = queueService.getAllUsersInQueue(id)
+                .stream()
+                .map(UserResponse::new).toList();
+
+        // Застосування пагінації та фільтрації
+        int startIndex = (page - 1) * size;
+        int endIndex = Math.min(startIndex + size, list.size());
+
+        if (startIndex < list.size()) {
+            list = list.subList(startIndex, endIndex);
+        } else {
+            list = Collections.emptyList();
+        }
+
+
+        return ResponseEntity.ok(list);
     }
 
 
@@ -114,9 +140,41 @@ public class UsersInQueueController {
         if (queueService.deleteUserFromQueue(id, userId)){
             return ResponseEntity.status(200).build();
         } else {
-            return ResponseEntity.status(404).build();
+            return ResponseEntity.status(500).build();
         }
     }
+
+    @Operation(
+            summary = "Self-delete user from Queue",
+            description = "Self-delete authorized user to specific queue. For this action session need bo be authorized" ,
+            parameters = {@Parameter(name = "id", description = "Queue Id", example = "2"),
+                    @Parameter(name = "userId", description = "User id, that must be kicked", example = "2")}
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Deleted"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized",
+                    content = @Content(schema = @Schema(implementation = NotAuthorizedException.class))),
+            @ApiResponse(responseCode = "403", description = "No Access (Not an owner)",
+                    content = @Content(schema = @Schema(implementation = ForbiddenAccessException.class))),
+            @ApiResponse(responseCode = "404", description = "Not Found",
+                    content = @Content(schema = @Schema(implementation = ResourceNotFoundException.class))),
+            @ApiResponse(responseCode = "500", description = "Server's problem", content = @Content)
+    })
+    @DeleteMapping("/{id}/self_delete")
+    private ResponseEntity<Void> selfRemoveUserFromQueue(@PathVariable @Positive Integer id,
+                                                     HttpSession session) {
+        //Перевірка, чи авторизований користувач
+        UserResponse user = getUser(session);
+        //Перевірка, чи є черга
+        queueService.getRestQueueById(id);
+
+        if (queueService.deleteUserFromQueue(id, user.getId())){
+            return ResponseEntity.status(200).build();
+        } else {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
 
 
     @Operation(
@@ -131,7 +189,8 @@ public class UsersInQueueController {
             @ApiResponse(responseCode = "403", description = "No Access (Not an owner)",
                     content = @Content(schema = @Schema(implementation = ForbiddenAccessException.class))),
             @ApiResponse(responseCode = "404", description = "Not Found",
-                    content = @Content(schema = @Schema(implementation = ResourceNotFoundException.class)))
+                    content = @Content(schema = @Schema(implementation = ResourceNotFoundException.class))),
+            @ApiResponse(responseCode = "500", description = "Server's problem", content = @Content)
     })
     @DeleteMapping("/{id}/move")
     private ResponseEntity<Void> moveUsersInQueue(@PathVariable @Positive Integer id,
@@ -147,7 +206,7 @@ public class UsersInQueueController {
         if (queueService.moveQueue(id)){
             return ResponseEntity.status(200).build();
         } else {
-            return ResponseEntity.status(404).build();
+            return ResponseEntity.status(500).build();
         }
     }
 

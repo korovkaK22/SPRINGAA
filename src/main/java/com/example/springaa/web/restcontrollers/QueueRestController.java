@@ -30,12 +30,7 @@ import java.util.Optional;
 @RequestMapping("/rest/queues")
 @Tag(name = "Queues", description = "In this class we do CRUD operations with Queues")
 public class QueueRestController {
-    @Autowired
     QueueService queueService;
-    @Autowired
-    AuthorizationService authorizationService;
-
-
 
     @Operation(
             summary = "Create Queue",

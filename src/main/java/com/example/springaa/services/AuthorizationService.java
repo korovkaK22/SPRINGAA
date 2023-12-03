@@ -6,6 +6,7 @@ import com.example.springaa.repositories.UserRepository;
 import com.example.springaa.security.PasswordHasher;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

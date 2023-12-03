@@ -23,7 +23,6 @@ import java.util.Objects;
 public class SpringConfiguration {
 
     @Bean
-    @Scope("singleton")
     public JdbcTemplate getJdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
@@ -39,8 +38,8 @@ public class SpringConfiguration {
         return new PasswordHasherImpl();
     }
 
-
     @Bean
+    @Scope("singleton")
     public DataSource dataSource(Environment environment) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(Objects.requireNonNull(environment.getProperty("spring.datasource.driver-class-name")));

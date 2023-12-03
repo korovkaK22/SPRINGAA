@@ -16,10 +16,5 @@ public class WebExceptionHandler {
         return "redirect:/404";
     }
 
-
-
-
-
-
-
 }
+
