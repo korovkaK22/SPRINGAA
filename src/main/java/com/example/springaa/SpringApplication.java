@@ -33,6 +33,10 @@ import java.util.Optional;
 public class SpringApplication {
 
     public static void main(String[] args) {
+
+
+
+
         ConfigurableApplicationContext context = org.springframework.boot.SpringApplication.run(SpringApplication.class, args);
          PasswordHasherImpl p = context.getBean("getPasswordHasher", PasswordHasherImpl.class);
         }
